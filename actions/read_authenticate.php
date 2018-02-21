@@ -28,4 +28,9 @@ if ($result) {
 } else {
     $output['errors'][] = 'Error in query';
 }
+
+if ($output['newUser']) {
+    $rand = rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9);
+    $output['pin'] = $rand;
+}
 ?>
