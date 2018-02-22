@@ -44,5 +44,9 @@ if ($result) {
 if ($output['newUser']) {
     $rand = rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9);
     $output['pin'] = $rand;
+    require_once ('./php_mailer/mail_handler.php');
+
+    //insert the users authentication into the auth table
+
 }
 ?>
