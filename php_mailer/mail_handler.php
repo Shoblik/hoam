@@ -6,6 +6,15 @@ $mail = new PHPMailer();
 
 // Configure SMTP
 $mail->IsSMTP();
+
+$mail->SMTPOptions = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+    )
+);
+
 $mail->SMTPDebug  = 0;          // verbose information
 $mail->SMTPAuth = true;
 $mail->SMTPSecure = "tls";
@@ -20,11 +29,28 @@ $mail->Password   = EMAIL_PASS;
 // Check
 $mail->Subject = "SMS activation pin";
 $mail->Body = $rand;
-$output['Im alive'] = true;
 
 
-$mail->AddAddress( "7149483092@tmomail.net" );
-//var_dump( $mail->send() );
+$mail->AddAddress( $phoneNumber . "@tmomail.net" );
+$mail->AddAddress( $phoneNumber . "@vtext.com" );
+$mail->AddAddress( $phoneNumber . "@vmobl.com" );
+$mail->AddAddress( $phoneNumber . "@sms.alltelwireless.com" );
+$mail->AddAddress( $phoneNumber . "@txt.att.net" );
+$mail->AddAddress( $phoneNumber . "@sms.myboostmobile.com" );
+$mail->AddAddress( $phoneNumber . "@text.republicwireless.com" );
+$mail->AddAddress( $phoneNumber . "@messaging.sprintpcs.com" );
+$mail->AddAddress( $phoneNumber . "@email.uscc.net" );
+
+
+
+
+$result = $mail->send();
+
+if ($result) {
+    $output['textSent'] = true;
+} else {
+    $output['textSent'] = false;
+}
 
 
 

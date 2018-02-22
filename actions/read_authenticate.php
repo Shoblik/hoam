@@ -47,6 +47,20 @@ if ($output['newUser']) {
     require_once ('./php_mailer/mail_handler.php');
 
     //insert the users authentication into the auth table
+    $query = "INSERT INTO `auth` (phone, pin)
+              VALUES ('$phoneNumber', $rand)";
+
+    $res = mysqli_query($conn, $query);
+    if ($res) {
+        if (mysqli_affected_rows($conn) > 0) {
+            $output['success'] = true;
+        } else {
+            $output['success'] = false;
+        }
+    } else {
+        $output['errors'] = 'Error in query';
+    }
+
 
 }
 ?>
