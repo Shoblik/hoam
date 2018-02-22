@@ -12,6 +12,8 @@ if(!isset($PAGEACCESS) || $PAGEACCESS===false){
 $output['success'] = true;
 $output['newUser'] = true;
 $phoneNumber = $_POST['phoneNumber'];
+$lat = $_POST['lat'];
+$lng = $_POST['lng'];
 $phoneNumber = '001' . $phoneNumber;
 
 //query the database checking if the users phone number already exists
@@ -24,6 +26,16 @@ $result = mysqli_query($conn, $query);
 if ($result) {
     if (mysqli_num_rows($result) > 0) {
         $output['newUser'] = false;
+    } else {
+        //get the users address
+        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&sensor=true";
+        $data = @file_get_contents($url);
+        $jsonData = json_decode($data,true);
+        if(is_array($jsonData) && $jsonData['status'] == "OK")
+        {
+            $formattedAddress = $jsonData['results'][0]['formatted_address'];
+            $output['address'] = $formattedAddress;
+        }
     }
 } else {
     $output['errors'][] = 'Error in query';
