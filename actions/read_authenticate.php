@@ -48,7 +48,7 @@ if ($output['newUser']) {
 
     //insert the users authentication into the auth table
     $query = "INSERT INTO `auth` (phone, pin)
-              VALUES ('$phoneNumber', $rand)";
+              VALUES ('$phoneNumber', '$rand')";
 
     $res = mysqli_query($conn, $query);
     if ($res) {
