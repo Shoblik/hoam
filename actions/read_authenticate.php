@@ -16,26 +16,25 @@ $lat = $_POST['lat'];
 $lng = $_POST['lng'];
 $phoneNumber = '001' . $phoneNumber;
 
+//get the users address
+$url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&sensor=true";
+$data = @file_get_contents($url);
+$jsonData = json_decode($data,true);
+if(is_array($jsonData) && $jsonData['status'] == "OK")
+{
+    $formattedAddress = $jsonData['results'][0]['formatted_address'];
+    $output['address'] = $formattedAddress;
+}
+
 //query the database checking if the users phone number already exists
 $query = "SELECT `phone`
           FROM `users`
           WHERE `phone` = $phoneNumber";
 $result = mysqli_query($conn, $query);
 
-
 if ($result) {
     if (mysqli_num_rows($result) > 0) {
         $output['newUser'] = false;
-    } else {
-        //get the users address
-        $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&sensor=true";
-        $data = @file_get_contents($url);
-        $jsonData = json_decode($data,true);
-        if(is_array($jsonData) && $jsonData['status'] == "OK")
-        {
-            $formattedAddress = $jsonData['results'][0]['formatted_address'];
-            $output['address'] = $formattedAddress;
-        }
     }
 } else {
     $output['errors'][] = 'Error in query';
