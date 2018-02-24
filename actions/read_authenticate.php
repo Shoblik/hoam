@@ -60,7 +60,7 @@ if ($output['newUser']) {
     } else {
         $output['errors'] = 'Error in query';
         $output['success'] = false;
-        $output['errors'][] = $query;
+        $output['errors'] = $query;
 
     }
 }
