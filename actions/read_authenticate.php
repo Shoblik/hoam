@@ -39,6 +39,7 @@ if ($result) {
     }
 } else {
     $output['errors'][] = 'Error in query';
+    $output['errors'][] = $query;
 }
 
 if ($output['newUser']) {
