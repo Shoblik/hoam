@@ -23,43 +23,53 @@ $jsonData = json_decode($data,true);
 if(is_array($jsonData) && $jsonData['status'] == "OK")
 {
     $formattedAddress = $jsonData['results'][0]['formatted_address'];
+    $zipCode = $jsonData['results'][0]['address_components'][6]['long_name'];
     $output['address'] = $formattedAddress;
 }
 
 //generate HOA list
-
-$url = 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=50&zip=92782&submit=';
-$content = file_get_contents($url);
-$length = strlen($content);
-$count = 0;
+$urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
+$count = count($urlArr);
 $bizArray = [];
 $tempBizName = '';
 $findGreaterThan = false;
 $scraping = false;
 
+for ($urlIndex = 0; $urlIndex < $count; $urlIndex++) {
+    $url = $urlArr[$urlIndex];
+    $content = file_get_contents($url);
+    $length = strlen($content);
 
-for ($i=0; $i<$length; $i++) {
-    if ($content[$i] === 'b' && $content[$i + 1] === 'i' && $content[$i + 2] === 'z' && $content[$i + 3] === '_' && $content[$i + 4] === 'n' && $content[$i + 5] === 'a' && $content[$i + 6] === 'm' && $content[$i + 7] === 'e') {
-        $findGreaterThan = true;
-    }
-    else if ($content[$i] === '>' && $findGreaterThan === true) {
-        $scraping = true;
-    }
-    else if ($content[$i] === '<' && $findGreaterThan === true) {
-        $findGreaterThan = false;
-        $scraping = false;
-        $bizArray[] = $tempBizName;
-        $tempBizName = null;
-    }
-    else if ($scraping) {
-        $tempBizName = $tempBizName . $content[$i];
+    for ($i=0; $i<$length; $i++) {
+        if ($content[$i] === 'b' && $content[$i + 1] === 'i' && $content[$i + 2] === 'z' && $content[$i + 3] === '_' && $content[$i + 4] === 'n' && $content[$i + 5] === 'a' && $content[$i + 6] === 'm' && $content[$i + 7] === 'e') {
+            $findGreaterThan = true;
+        }
+        else if ($content[$i] === '>' && $findGreaterThan === true) {
+            $scraping = true;
+        }
+        else if ($content[$i] === '<' && $findGreaterThan === true) {
+            $findGreaterThan = false;
+            $scraping = false;
+            $bizArray[] = $tempBizName;
+            $tempBizName = null;
+        }
+        else if ($scraping) {
+            $tempBizName = $tempBizName . $content[$i];
 
+        }
     }
+
+}
+//$output['data'] = $bizArray;
+
+$bizArrCount = count($bizArray);
+$cleanedBizArray = array();
+
+for ($i=0; $i<$bizArrCount; $i++) {
+    $cleanedBizArray[$bizArray[$i]] = 1;
 }
 
-
-
-$output['data'] = $bizArray;
+$output['data'] = array_keys($cleanedBizArray);
 
 //query the database checking if the users phone number already exists
 $query = "SELECT `phone`
