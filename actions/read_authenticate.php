@@ -37,7 +37,7 @@ $scraping = false;
 
 for ($urlIndex = 0; $urlIndex < $count; $urlIndex++) {
     $url = $urlArr[$urlIndex];
-    $content = file_get_contents($url);
+    $content = @file_get_contents($url);
     $length = strlen($content);
 
     for ($i=0; $i<$length; $i++) {
