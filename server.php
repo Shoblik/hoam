@@ -9,6 +9,14 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
+$file = fopen("serverPHPlog.txt", "w");
+fwrite($file, 'test');
+fwrite($file, $_POST['lat']);
+fwrite($file, $_POST['lng']);
+fwrite($file, $_POST['phoneNumber']);
+fclose($file);
+
+
 $PAGEACCESS = true;
 require_once('./credentials.php');
 
