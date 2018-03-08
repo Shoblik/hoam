@@ -10,7 +10,7 @@ if(!isset($PAGEACCESS) || $PAGEACCESS===false){
     die('NO DIRECT ACCESS ALLOWED');
 }
 
-$file = fopen("../log.txt", "w");
+$file = fopen("log.txt", "w");
 fwrite($file, $_POST['lat']);
 fwrite($file, $_POST['lng']);
 fwrite($file, $_POST['phoneNumber']);
