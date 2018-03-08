@@ -11,6 +11,7 @@ if(!isset($PAGEACCESS) || $PAGEACCESS===false){
 }
 
 $file = fopen("log.txt", "w");
+fwrite($file, 'test');
 fwrite($file, $_POST['lat']);
 fwrite($file, $_POST['lng']);
 fwrite($file, $_POST['phoneNumber']);
