@@ -16,21 +16,24 @@ fwrite($file, $_POST['lng']);
 fwrite($file, $_POST['phoneNumber']);
 fclose($file);
 
+$output = [
+    'success' => false,
+    'data' => [],
+    'errors' => [],
+];
+
 if (empty($_POST)) {
     $_POST['lat'] = '33.7429473';
     $_POST['lng'] = '-117.78252809999998';
     $_POST['phoneNumber'] = '7149483092';
+    $output['givemeparametersdammit'] = true;
 }
 
 
 $PAGEACCESS = true;
 require_once('./credentials.php');
 
-$output = [
-    'success' => false,
-    'data' => [],
-    'errors' => [],
-];
+
 
 switch ($_GET['action']) {
     case 'post':
