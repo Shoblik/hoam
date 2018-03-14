@@ -33,13 +33,14 @@ $output = [
 $PAGEACCESS = true;
 require_once('./credentials.php');
 
-
-
 switch ($_GET['action']) {
     case 'get':
         switch ($_GET['resource']) {
             case 'authenticate':
                 require_once ('./actions/read_authenticate.php');
+                break;
+            case 'authorize':
+                require_once ('./actions/authorize.php');
                 break;
         }
 }
