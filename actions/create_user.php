@@ -14,46 +14,34 @@ $lat = $_GET['lat'];
 $lng = $_GET['lng'];
 $name = $_GET['nickName'];
 $pin = $_GET['pin'];
-
+$zipCode = null;
+$formattedAddress = null;
 
 //get the users address
 function getAddress($lat, $lng) {
     $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&sensor=true";
     $data = @file_get_contents($url);
     $jsonData = json_decode($data,true);
+    global $formattedAddress;
+    global $zipCode;
     if(is_array($jsonData) && $jsonData['status'] == "OK") {
         $formattedAddress = $jsonData['results'][0]['formatted_address'];
         $zipCode = $jsonData['results'][0]['address_components'][6]['long_name'];
-
-        return array($zipCode, $formattedAddress);
-    } else {
-        $output['errors'][] = 'Unable to fetch google data';
+    }
+    if ($zipCode == null || $formattedAddress == null) {
         getAddress($lat, $lng);
     }
 };
-
-$addressArr = getAddress($lat, $lng);
-$zipCode = $addressArr[0];
-$formattedAddress = $addressArr[1];
+getAddress($lat, $lng);
 
 $output['zipCode'] = $zipCode;
 $output['address'] = $formattedAddress;
-
-if ($zipCode == null || $formattedAddress == null) {
-    $output['noAddress'] = true;
-    $addressArr = getAddress($lat, $lng);
-    $zipCode = $addressArr[0];
-    $formattedAddress = $addressArr[1];
-
-    $output['zipCode'] = $zipCode;
-    $output['address'] = $formattedAddress;
-}
-
 
 $query = "SELECT * FROM `auth` WHERE `phone` = '$phoneNumber' AND `pin` = $pin";
 $result = mysqli_query($conn, $query);
 
 if ($result) {
+    $output['count'] = mysqli_num_rows($result);
     if (mysqli_num_rows($result) > 0) {
         $output['validCreds'] = true;
     } else {
@@ -61,4 +49,8 @@ if ($result) {
     }
 } else {
     $output['errors'][] = 'Error in query';
+}
+
+if ($output['validCreds']) {
+
 }
