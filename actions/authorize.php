@@ -27,3 +27,25 @@ if ($result) {
 } else {
     $output['errors'][] = 'Error in query';
 }
+
+if ($output['newUser']) {
+    $rand = rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9);
+    $output['pin'] = $rand;
+    require_once ('./php_mailer/mail_handler.php');
+
+    //insert the users authentication into the auth table
+    $query = "INSERT INTO `auth` (phone, pin)
+              VALUES ('$phoneNumber', '$rand')";
+
+    $res = mysqli_query($conn, $query);
+    if ($res) {
+        if (mysqli_affected_rows($conn) > 0) {
+            $output['success'] = true;
+        } else {
+            $output['success'] = false;
+        }
+    } else {
+        $output['errors'] = 'Error in query';
+        $output['success'] = false;
+    }
+}
