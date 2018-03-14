@@ -42,6 +42,9 @@ switch ($_GET['action']) {
             case 'authorize':
                 require_once ('./actions/authorize.php');
                 break;
+            case 'createUser':
+                require_once ('./actions/create_user.php');
+                break;
         }
 }
 $json_output = json_encode($output);
