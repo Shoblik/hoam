@@ -22,12 +22,12 @@ $output = [
     'errors' => [],
 ];
 
-if (empty($_POST)) {
-    $_POST['lat'] = '33.7429473';
-    $_POST['lng'] = '-117.78252809999998';
-    $_POST['phoneNumber'] = '7149483092';
-    $output['givemeparametersdammit'] = true;
-}
+//if (empty($_POST)) {
+//    $_POST['lat'] = '33.7429473';
+//    $_POST['lng'] = '-117.78252809999998';
+//    $_POST['phoneNumber'] = '7149483092';
+//    $output['givemeparametersdammit'] = true;
+//}
 
 
 $PAGEACCESS = true;
@@ -36,12 +36,10 @@ require_once('./credentials.php');
 
 
 switch ($_GET['action']) {
-    case 'post':
+    case 'get':
         switch ($_GET['resource']) {
             case 'authenticate':
-                if (!empty($_POST)) {
-                    require_once ('./actions/read_authenticate.php');
-                }
+                require_once ('./actions/read_authenticate.php');
                 break;
         }
 }
