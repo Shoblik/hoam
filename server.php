@@ -37,7 +37,7 @@ switch ($_GET['action']) {
     case 'get':
         switch ($_GET['resource']) {
             case 'authenticate':
-                require_once ('./actions/read_authenticate.php');
+                require_once('./actions/dustbin.php');
                 break;
             case 'authorize':
                 require_once ('./actions/authorize.php');
