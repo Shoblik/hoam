@@ -82,22 +82,6 @@ function getAddress($lat, $lng) {
 
     getHoaList($zipCode, $output);
 
-
-$query = "SELECT * FROM `auth` WHERE `phone` = '$phoneNumber' AND `pin` = $pin";
-$result = mysqli_query($conn, $query);
-
-if ($result) {
-    if (mysqli_num_rows($result) > 0) {
-        $output['validCreds'] = true;
-    } else {
-        $output['validCreds'] = false;
-        $output['createdUser'] = false;
-    }
-} else {
-    $output['errors'][] = 'Error in query finding authorization credentials';
-}
-
-if ($output['validCreds']) {
     //create new user in database
     $query = "INSERT INTO `users` (`name`, `phone`, `gps_loc`, `address`, `created`, `updated`, `active`) 
               VALUES ('$name', '$phoneNumber', '$formattedGPS', '$formattedAddress', CURRENT_DATE, CURRENT_DATE, 'active')";
@@ -112,4 +96,3 @@ if ($output['validCreds']) {
     } else {
         $output['errors'][] = 'Error inserting new user';
     }
-}
