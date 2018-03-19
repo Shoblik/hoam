@@ -9,8 +9,12 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
-$PAGEACCESS = true;
-require_once('./credentials.php');
+$file = fopen("serverPHPlog.txt", "w");
+fwrite($file, 'test');
+fwrite($file, $_POST['lat']);
+fwrite($file, $_POST['lng']);
+fwrite($file, $_POST['phoneNumber']);
+fclose($file);
 
 $output = [
     'success' => false,
@@ -18,13 +22,28 @@ $output = [
     'errors' => [],
 ];
 
+//if (empty($_POST)) {
+//    $_POST['lat'] = '33.7429473';
+//    $_POST['lng'] = '-117.78252809999998';
+//    $_POST['phoneNumber'] = '7149483092';
+//    $output['givemeparametersdammit'] = true;
+//}
+
+
+$PAGEACCESS = true;
+require_once('./credentials.php');
+
 switch ($_GET['action']) {
-    case 'post':
+    case 'get':
         switch ($_GET['resource']) {
             case 'authenticate':
-                if (!empty($_POST)) {
-                    require_once ('./actions/read_authenticate.php');
-                }
+                require_once('./actions/dustbin.php');
+                break;
+            case 'authorize':
+                require_once ('./actions/authorize.php');
+                break;
+            case 'createUser':
+                require_once ('./actions/create_user.php');
                 break;
         }
 }

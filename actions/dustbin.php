@@ -9,11 +9,19 @@
 if(!isset($PAGEACCESS) || $PAGEACCESS===false){
     die('NO DIRECT ACCESS ALLOWED');
 }
+
+$file = fopen("log.txt", "w");
+fwrite($file, 'test');
+fwrite($file, $_GET['lat']);
+fwrite($file, $_GET['lng']);
+fwrite($file, $_GET['phoneNumber']);
+fclose($file);
+
 $output['success'] = true;
 $output['newUser'] = true;
-$phoneNumber = $_POST['phoneNumber'];
-$lat = $_POST['lat'];
-$lng = $_POST['lng'];
+$phoneNumber = $_GET['phoneNumber'];
+$lat = $_GET['lat'];
+$lng = $_GET['lng'];
 $phoneNumber = '001' . $phoneNumber;
 
 //get the users address
@@ -28,8 +36,7 @@ if(is_array($jsonData) && $jsonData['status'] == "OK")
 }
 
 //generate HOA list
-//$urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
-$urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit='];
+$urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
 $count = count($urlArr);
 $bizArray = [];
 $tempBizName = '';
