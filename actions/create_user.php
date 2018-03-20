@@ -37,50 +37,50 @@ function getAddress($lat, $lng) {
 
 
     //generate HOA list
-    function getHoaList($zipCode, &$output) {
-        $urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
-        $count = count($urlArr);
-        $bizArray = [];
-        $tempBizName = '';
-        $findGreaterThan = false;
-        $scraping = false;
+function getHoaList($zipCode, &$output) {
+    $urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
+    $count = count($urlArr);
+    $bizArray = [];
+    $tempBizName = '';
+    $findGreaterThan = false;
+    $scraping = false;
 
-        for ($urlIndex = 0; $urlIndex < $count; $urlIndex++) {
-            $url = $urlArr[$urlIndex];
+    for ($urlIndex = 0; $urlIndex < $count; $urlIndex++) {
+        $url = $urlArr[$urlIndex];
 
-            $content = @file_get_contents($url);
-            $length = strlen($content);
+        $content = @file_get_contents($url);
+        $length = strlen($content);
 
-            for ($i=0; $i<$length; $i++) {
-                if ($content[$i] === 'b' && $content[$i + 1] === 'i' && $content[$i + 2] === 'z' && $content[$i + 3] === '_' && $content[$i + 4] === 'n' && $content[$i + 5] === 'a' && $content[$i + 6] === 'm' && $content[$i + 7] === 'e') {
-                    $findGreaterThan = true;
-                }
-                else if ($content[$i] === '>' && $findGreaterThan === true) {
-                    $scraping = true;
-                }
-                else if ($content[$i] === '<' && $findGreaterThan === true) {
-                    $findGreaterThan = false;
-                    $scraping = false;
-                    $bizArray[] = $tempBizName;
-                    $tempBizName = null;
-                }
-                else if ($scraping) {
-                    $tempBizName = $tempBizName . $content[$i];
-
-                }
+        for ($i=0; $i<$length; $i++) {
+            if ($content[$i] === 'b' && $content[$i + 1] === 'i' && $content[$i + 2] === 'z' && $content[$i + 3] === '_' && $content[$i + 4] === 'n' && $content[$i + 5] === 'a' && $content[$i + 6] === 'm' && $content[$i + 7] === 'e') {
+                $findGreaterThan = true;
             }
+            else if ($content[$i] === '>' && $findGreaterThan === true) {
+                $scraping = true;
+            }
+            else if ($content[$i] === '<' && $findGreaterThan === true) {
+                $findGreaterThan = false;
+                $scraping = false;
+                $bizArray[] = $tempBizName;
+                $tempBizName = null;
+            }
+            else if ($scraping) {
+                $tempBizName = $tempBizName . $content[$i];
 
+            }
         }
-        $bizArrCount = count($bizArray);
-        $cleanedBizArray = array();
 
-        for ($i=0; $i<$bizArrCount; $i++) {
-            $cleanedBizArray[$bizArray[$i]] = 1;
-        }
-        $output['data'] = array_keys($cleanedBizArray);
     }
+    $bizArrCount = count($bizArray);
+    $cleanedBizArray = array();
 
-    getHoaList($zipCode, $output);
+    for ($i=0; $i<$bizArrCount; $i++) {
+        $cleanedBizArray[$bizArray[$i]] = 1;
+    }
+    $output['data'] = array_keys($cleanedBizArray);
+}
+
+getHoaList($zipCode, $output);
 
     //create new user in database
     $query = "INSERT INTO `users` (`name`, `phone`, `gps_loc`, `address`, `created`, `updated`, `active`) 
