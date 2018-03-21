@@ -45,6 +45,10 @@ switch ($_GET['action']) {
             case 'createUser':
                 require_once ('./actions/create_user.php');
                 break;
+            case 'test':
+                $output['success'] = true;
+                $output['testSuccessful'] = true;
+                break;
         }
 }
 $json_output = json_encode($output);
