@@ -29,9 +29,9 @@ function getAddress($lat, $lng) {
         $formattedAddress = $jsonData['results'][0]['formatted_address'];
         $zipCode = $jsonData['results'][0]['address_components'][6]['long_name'];
     }
-    if ($zipCode == null || $formattedAddress == null) {
-        getAddress($lat, $lng);
-    }
+//    if ($zipCode == null || $formattedAddress == null) {
+//        getAddress($lat, $lng);
+//    }
 };
     getAddress($lat, $lng);
 
