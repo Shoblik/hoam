@@ -30,15 +30,14 @@ function getAddress($lat, $lng) {
         $zipCode = $jsonData['results'][0]['address_components'][6]['long_name'];
     }
     if ($zipCode == null || $formattedAddress == null) {
-        $data = null;
-        $jsonData = null;
         getAddress($lat, $lng);
+
     }
 };
-    getAddress($lat, $lng);
+getAddress($lat, $lng);
 
 
-    //generate HOA list
+//generate HOA list
 function getHoaList($zipCode, &$output) {
     $urlArr = ['https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=71&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=73&zip=' . $zipCode . '&submit=', 'https://www.allpropertymanagement.com/find/index.php?thisSearchPage=HOME&search=Y&t=76&zip=' . $zipCode . '&submit='];
     $count = count($urlArr);
@@ -84,17 +83,19 @@ function getHoaList($zipCode, &$output) {
 
 getHoaList($zipCode, $output);
 
-    //create new user in database
-    $query = "INSERT INTO `users` (`name`, `phone`, `gps_loc`, `address`, `created`, `updated`, `active`) 
+//create new user in database
+$query = "INSERT INTO `users` (`name`, `phone`, `gps_loc`, `address`, `created`, `updated`, `active`)
               VALUES ('$name', '$phoneNumber', '$formattedGPS', '$formattedAddress', CURRENT_DATE, CURRENT_DATE, 'active')";
-    $result = mysqli_query($conn, $query);
+$result = mysqli_query($conn, $query);
 
-    if ($result) {
-        if (mysqli_affected_rows($conn) > 0) {
-            $output['createdUser'] = true;
-        } else {
-            $output['createdUser'] = false;
-        }
+if ($result) {
+    if (mysqli_affected_rows($conn) > 0) {
+        $output['createdUser'] = true;
     } else {
-        $output['errors'][] = 'Error inserting new user';
+        $output['createdUser'] = false;
     }
+} else {
+    $output['errors'][] = 'Error inserting new user';
+}
+
+
